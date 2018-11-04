@@ -1,0 +1,214 @@
+:root {
+    --font-size-small: 1.3vw;
+    --font-size-medium: 1.7vw;
+    --font-size-large: 3vw;
+
+    --profile-img-size: 2.5rem;
+
+    --button-padding: 0.3rem;
+    --border-radius: 0.5em;
+    --border-width: 0.20rem;
+
+    --contrast: #333333;
+    --background-content: white;
+    --background: #eeeeee;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+
+    color: var(--contrast);
+    background-color: var(--background);
+    font-family: 'Mali';
+    font-size: var(--font-size-large);
+}
+
+.page {
+    width: 100%;
+}
+
+main.content {
+    background-color: var(--background-content);
+    padding: 2rem;
+    width: 75%;
+}
+
+main > button, main form input[type="text"] {
+    background-color: var(--background-content);
+    color: var(--contrast);
+}
+
+img.profile-image {
+    width: var(--profile-img-size);
+    height: var(--profile-img-size);
+    border-radius: 100%;
+    border: solid var(--contrast) var(--border-width);
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.flex-align {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.flex-left {
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.flex-row {
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.loading-container {
+    width: 100%;
+}
+
+div.profile-summary {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    padding-left: 1rem;
+    padding-right: 1rem;
+
+    font-family: 'Open Sans';
+}
+
+pre.code {
+    border-radius: var(--border-radius);
+    margin: 1rem;
+}
+
+button {
+    font-family: 'Open Sans';
+    font-size: var(--font-size-medium);
+    cursor: pointer;
+
+    outline: none;
+    border: none;
+
+    margin: 0.5rem;
+    border-radius: var(--border-radius);
+    background-color: var(--background-content);
+    padding: var(--button-padding);
+    padding-left: 4rem;
+    padding-right: 4rem;
+
+    transition-duration: 0.2s;
+    transition-property: background-color;
+}
+
+button:hover {
+    background-color: var(--contrast);
+    color: var(--background);
+}
+
+p {
+    font-family: 'Open Sans';
+    font-size: var(--font-size-medium);
+}
+
+h1, h2 {
+    margin: 0.5rem;
+}
+
+h2 {
+    font-size: var(--font-size-medium);
+}
+
+h3 {
+    font-size: var(--font-size-small);
+    font-weight: bold;
+    color: var(--contrast);
+}
+
+input[type='text'] {
+    background-color: var(--background);
+    color: var(--contrast);
+    font-size: var(--font-size-medium);
+
+    outline: none;
+    border: none;
+
+    margin: 0.5rem;
+    border-radius: var(--border-radius);
+    padding: var(--button-padding);
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+input[type="text"]:hover {
+    background-color: var(--contrast);
+    color: var(--background);
+}
+
+nav {
+    font-size: var(--font-size-medium);
+    background-color: var(--background-content);
+}
+
+header button {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+header {
+    font-size: var(--font-size-medium);
+    background-color: var(--background-content);
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.header-left {
+    margin-left: 2rem;
+    margin-right: auto;
+}
+.header-right {
+    margin-right: 2rem;
+    margin-left: auto;
+}
+
+div.hidden {
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+div.hidden button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    margin: 0;
+    background-color: var(--contrast);
+    color: var(--background-content);
+    padding: var(--button-padding);
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+}
+div.hidden button:hover {
+    background-color: var(--background-content);
+    color: var(--contrast);
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}

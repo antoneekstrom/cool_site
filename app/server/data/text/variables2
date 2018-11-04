@@ -1,0 +1,5 @@
+/* Either do this */
+var nice;
+nice = "epic";
+/* Or this */
+var nice = "epic";
