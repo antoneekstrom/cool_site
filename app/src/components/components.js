@@ -36,13 +36,13 @@ export class Header extends Component {
     visible() {
         return (
             <header>
-                <div className="header-left">
+                <div className="header-left flex-row">
                     {this.toggleButton()}
                 </div>
                 <div className="header-middle flex-row">
                     <NavigationBar/>
                 </div>
-                <div className="header-right">
+                <div className="header-right flex-row">
                     <ProfileSummary profileName="Anton"/>
                 </div>
             </header>

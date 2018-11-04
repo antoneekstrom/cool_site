@@ -32,6 +32,10 @@ export class Profile {
     constructor(obj) {
         this.username = obj.username;
         this.imagePath = obj.imagePath;
+        this.firstName = obj.personal.firstName;
+        this.lastName = obj.personal.lastName;
+        this.birthday = obj.personal.birthday;
+        this.gender = obj.personal.gender;
 
         if (this.username == null) {this.username = 'despacito';}
         if (this.imagePath == null) {this.imagePath = DEFAULT_PROFILE_IMAGE_PATH;}

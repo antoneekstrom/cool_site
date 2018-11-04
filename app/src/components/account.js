@@ -3,6 +3,7 @@ import { Component } from 'react';
 import { getProfile, Profile, parseCompleteURL } from '../data/data';
 
 import { Loading } from "../components/components";
+import { getNavigator } from '../app';
 
 export class ProfileImage extends Component {
     constructor(props) {
@@ -10,20 +11,25 @@ export class ProfileImage extends Component {
 
         this.src = parseCompleteURL(this.props.profile.imagePath);
     }
+
+    handleClick() {
+        getNavigator().navigate('/profile');
+    }
     
     render() {
-        return (
-            <div>
-                <img className="profile-image" src={this.src}></img>
-            </div>
-        );
+        return <img onClick={() => this.handleClick()} className="profile-image" src={this.src}></img>;
     }
 }
 
-export function ProfileName(props) {
-    return (
-        <h3>{props.profile.username}</h3>
-    );
+export class ProfileName extends Component {
+    handleClick() {
+        getNavigator().navigate('/profile');
+    }
+    render() {
+        return (
+            <h3 className="profile-name" onClick={() => this.handleClick()}>{this.props.profile.username}</h3>
+        );
+    }
 }
 
 export class ProfileSummary extends Component {

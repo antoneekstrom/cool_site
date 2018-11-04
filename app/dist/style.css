@@ -1,9 +1,9 @@
 :root {
     --font-size-small: 1.3vw;
-    --font-size-medium: 1.7vw;
+    --font-size-medium: 1.4vw;
     --font-size-large: 3vw;
 
-    --profile-img-size: 2.5rem;
+    --profile-img-size: 3rem;
 
     --button-padding: 0.3rem;
     --border-radius: 0.5em;
@@ -42,8 +42,11 @@ main > button, main form input[type="text"] {
 img.profile-image {
     width: var(--profile-img-size);
     height: var(--profile-img-size);
+    margin-left: 1rem;
+    margin-right: 1rem;
     border-radius: 100%;
     border: solid var(--contrast) var(--border-width);
+    cursor: pointer;
 }
 
 .flex-center {
@@ -68,7 +71,7 @@ img.profile-image {
 
 .flex-row {
     display: flex;
-    align-items: start;
+    align-items: center;
     justify-content: center;
     flex-direction: row;
 }
@@ -77,10 +80,20 @@ img.profile-image {
     width: 100%;
 }
 
+.profile-name {
+    cursor: pointer;
+}
+
+.loading-container h2 {
+    width: 4.5rem;
+}
+
 div.profile-summary {
     display: flex;
     flex-direction: row;
     align-items: center;
+
+    height: 100%;
 
     padding-left: 1rem;
     padding-right: 1rem;
@@ -158,9 +171,14 @@ input[type="text"]:hover {
 nav {
     font-size: var(--font-size-medium);
     background-color: var(--background-content);
+
+    height: 100%;
 }
 
 header button {
+    margin: 0;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
     padding-left: 1rem;
     padding-right: 1rem;
 }
@@ -174,17 +192,24 @@ header {
     align-items: center;
     flex-direction: row;
 
+    height: 4rem;
     width: 100%;
+    padding: 0.3rem;
     margin-bottom: 1rem;
 }
 
 .header-left {
     margin-left: 2rem;
     margin-right: auto;
+    height: 100%;
 }
 .header-right {
     margin-right: 2rem;
     margin-left: auto;
+    height: 100%;
+}
+.header-middle {
+    height: 100%;
 }
 
 div.hidden {

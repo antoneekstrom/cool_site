@@ -6,7 +6,6 @@ const pages = {
     'Home': '/home',
     'Info': '/info',
     'Example': '/example',
-    'Game': '/game'
 }
 
 export class NavigationButton extends Component {
@@ -71,7 +70,7 @@ export class NavigationBar extends Component {
     render() {
         var links = this.links();
         return (
-            <nav>{ links }</nav>
+            <nav className="flex-row">{ links }</nav>
         );
     }
 }

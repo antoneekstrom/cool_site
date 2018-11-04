@@ -8,6 +8,7 @@ import { Welcome } from "./pages/welcome";
 import { Info } from './pages/info';
 import { Example } from './pages/example';
 import { Game } from './pages/game';
+import { ProfilePage } from './pages/profile';
 
 let navigator = new Navigator();
 
@@ -27,7 +28,7 @@ export class App extends Component {
             'home': <Welcome/>,
             'info': <Info/>,
             'example': <Example/>,
-            'game': <Game/>
+            'profile': <ProfilePage/>
         };
 
         this.state = {
