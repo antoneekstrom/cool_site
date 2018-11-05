@@ -32,13 +32,33 @@ export class Profile {
     constructor(obj) {
         this.username = obj.username;
         this.imagePath = obj.imagePath;
-        this.firstName = obj.personal.firstName;
-        this.lastName = obj.personal.lastName;
-        this.birthday = obj.personal.birthday;
-        this.gender = obj.personal.gender;
+        this.firstName = obj.firstName;
+        this.lastName = obj.lastName;
+        this.birthDay = obj.birthDay;
+        this.birthMonth = obj.birthMonth;
+        this.birthYear = obj.birthYear;
+        this.gender = obj.gender;
 
         if (this.username == null) {this.username = 'despacito';}
         if (this.imagePath == null) {this.imagePath = DEFAULT_PROFILE_IMAGE_PATH;}
+    }
+    getBirthdayAsDate() {
+        const SEPARATOR = '/';
+        return this.birthDay + SEPARATOR + this.birthMonth + SEPARATOR + this.birthYear;
+    }
+    getProfileAsObject() {
+        let obj = {
+            'username': this.username,
+            'imagePath': this.imagePath,
+            'firstName': this.firstName,
+            'lastName': this.lastName,
+            'birthDay': this.birthDay,
+            'birthMonth': this.birthMonth,
+            'birthYear': this.birthYear,
+            'birthDate': this.getBirthdayAsDate(),
+            'gender': this.gender,
+        };
+        return obj;
     }
 }
 

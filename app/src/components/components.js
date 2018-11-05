@@ -2,7 +2,7 @@ import React from 'react';
 import { Component } from 'react';
 
 import Prism from 'prismjs';
-import { readResponseText } from '../data/data';
+import { readResponseText } from '../data/clientdata';
 import { NavigationBar } from './navigation';
 import { getNavigator } from '../app';
 import { ProfileSummary } from './account';
@@ -86,6 +86,38 @@ export class CodeBlock extends Component {
             <pre className="code">
                 <code ref={this.ref} className={`language-${this.props.lang}`}>{this.state.text}</code>
             </pre>
+        );
+    }
+}
+
+export class Sheet extends Component {
+    constructor(props) {
+        super(props);
+        this.suffix = this.props.suffix == null ? ':' : this.props.suffix;
+    }
+    Row(props) {
+        return (
+            <li className="sheet-row">
+                <h2 className="row-left">{props.left}</h2>
+                <h2 className="row-right">{props.right}</h2>
+            </li>
+        );
+    }
+    getComponents() {
+        let comps = [];
+        let data = this.props.data;
+
+        for (let key in data) {
+            comps.push(
+                <this.Row key={key} left={key + this.suffix} right={data[key]}/>
+            );
+        }
+
+        return comps;
+    }
+    render() {
+        return (
+            <ul className="sheet">{this.getComponents()}</ul>
         );
     }
 }

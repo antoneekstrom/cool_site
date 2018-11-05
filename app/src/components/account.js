@@ -1,6 +1,6 @@
 import React from 'react';
 import { Component } from 'react';
-import { getProfile, Profile, parseCompleteURL } from '../data/data';
+import { getProfile, Profile, parseCompleteURL } from '../data/clientdata';
 
 import { Loading } from "../components/components";
 import { getNavigator } from '../app';
@@ -57,6 +57,20 @@ export class ProfileSummary extends Component {
 
     render() {
         return this.state.profile == undefined ? <Loading/> : this.getComponents();
+    }
+}
+
+export class CreateAccount extends Component {
+    constructor(props) {
+        super(props);
+    }
+    
+    render() {
+        return (
+            <form className="flex-center">
+                <h2>Login</h2>
+            </form>
+        );
     }
 }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Component } from 'react';
-import { getProfile } from '../data/data';
-import { ContentLoader, Loading, Page, Header } from '../components/components';
+import { getProfile } from '../data/clientdata';
+import { ContentLoader, Loading, Page, Header, Sheet } from '../components/components';
 
 export class ProfilePage extends Component {
     constructor(props) {
@@ -17,18 +17,32 @@ export class ProfilePage extends Component {
         getProfile('Anton', (profile) => this.setState({profile: profile}));
     }
 
+    getDisplayData() {
+        const exclude = [
+            'imagePath',
+            'username',
+            'birthYear',
+            'birthMonth',
+            'birthDay',
+        ];
+        let obj = this.state.profile.getProfileAsObject();
+        for (let key in obj) {
+            if (exclude.includes(key)) {
+                delete obj.key;
+            }
+            if (key == 'birthDate') {key = 'birthday';}
+        }
+        return obj;
+    }
+
     getContent() {
+        const data = this.getDisplayData();
         return (
             <Page>
                 <Header/>
                 <main className="flex-center">
                     <h1>{this.state.profile.username}</h1>
-                    <div className="flex-left">
-                        <h2>First name: {this.state.profile.firstName}</h2>
-                        <h2>Last name: {this.state.profile.lastName}</h2>
-                        <h2>Birthday: {this.state.profile.birthday}</h2>
-                        <h2>Gender: {this.state.profile.gender}</h2>
-                    </div>
+                    <Sheet data={data}/>
                 </main>
             </Page>
         );

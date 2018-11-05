@@ -7,7 +7,10 @@ module.exports.app = app;
 module.exports.__rootdir = __dirname;
 
 const ud = require('./app/server/usedirectory');
-const login = require('./app/server/session/login');
+const login = require('./app/server/handledata');
+const db = require('./app/server/db/database');
+
+module.exports.db = db;
 
 const port = 8080, hostname = 'localhost';
 
@@ -15,11 +18,25 @@ app.use('/', express.static(__dirname + '/app/dist'));
 
 login.handleUserPaths(app);
 
+function runDb() {
+    let run = (callback) => {
+        db.sqlLogin('server', 'password');
+        db.connect((err) => callback());
+    }
+    return new Promise((resolve, reject) => {
+        run(() => resolve());
+    });
+}
+
 function run() {
-    getText()
+    runDb()
+    .then(() => getText()
     .then(() => getImages()
-    .then(() => doCatchAll()
-    ));
+    .then(() => {
+        doCatchAll();
+        listen(hostname, port);
+    }
+    )));
 }
 
 /** text / code examples */
@@ -38,7 +55,9 @@ function doCatchAll() {
     });
 }
 
+function listen(hostname, port) {
+    app.listen(port, hostname, () => console.log(`listening on ${hostname}:${port}`));
+}
+
 //execute functions and start server
 run();
-
-app.listen(port, hostname, () => console.log(`listening on ${hostname}:${port}`));
