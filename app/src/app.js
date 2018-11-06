@@ -41,10 +41,10 @@ export class App extends Component {
      */
     getContent() {
         var page = <h1>page</h1>;
-        const pageName = this.navigator.getRouteName();
 
         for (var key in this.pages) {
-            if (key == pageName) {
+            if (this.navigator.getRouteName() == key) {
+                console.log('page: ' + key);
                 page = this.pages[key];
             }
         }

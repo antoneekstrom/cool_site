@@ -1,3 +1,5 @@
+import { getProfile, getLoggedInProfile, constructFetch } from "./data/clientdata";
+
 /**
  * Calls observers with new route whenever URL is changed (with this router).
  */
@@ -44,6 +46,15 @@ class Navigator {
 
         window.history.pushState(data, title, path);
         this.notifyObservers();
+    }
+
+    navigateToProfilePage(username) {
+        let path = constructFetch('/profile', {username: username});
+        this.navigate(path);
+    }
+
+    isOnPath(s) {
+        return this.getRoute().includes(s);
     }
 
     getRouteName() {

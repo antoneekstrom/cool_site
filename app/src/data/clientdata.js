@@ -1,3 +1,5 @@
+import $ from "jquery";
+
 /**
  * @param {Response} res response object from fetch()
  */
@@ -23,9 +25,8 @@ export function parseCompleteURL(route) {
     }
 }
 
-const DEFAULT_PROFILE_IMAGE_PATH = '/data/images/default.jpg';
+const DEFAULT_PROFILE_IMAGE_PATH = '/data/images/default.jpg', SEPARATOR = '/';
 export class Profile {
-
     /**
      * @param {JSON} obj containing profile information 
      */
@@ -43,8 +44,7 @@ export class Profile {
         if (this.imagePath == null) {this.imagePath = DEFAULT_PROFILE_IMAGE_PATH;}
     }
     getBirthdayAsDate() {
-        const SEPARATOR = '/';
-        return this.birthDay + SEPARATOR + this.birthMonth + SEPARATOR + this.birthYear;
+        return getDate(this.birthDay, this.birthMonth, this.birthYear);
     }
     getProfileAsObject() {
         let obj = {
@@ -62,6 +62,32 @@ export class Profile {
     }
 }
 
+export function getDate(day, month, year) {
+    return day + SEPARATOR + month + SEPARATOR + year;
+}
+
+/**
+ * String will be obscured by DOING NOTHING. Yeah. It just kind of looks bad to send a password in plaintext y'know.
+ * @param {String} text to obscure
+ * @returns {String} epic string
+ */
+export function obscureString(text) {
+    return text;
+}
+
+export function getUsernameFromURL() {
+    let url = new URL(window.location.href);
+    return url.searchParams.get('username');
+}
+
+/**
+ * epic
+ * @param {String} text 
+ */
+export function unobscureString(text) {
+    return text;
+}
+
 /**
  * @param {String} route to request from
  * @param {Object} query object with queries in it
@@ -75,8 +101,21 @@ export function constructFetch(route, query) {
     return url;
 }
 
+export function createUser(firstname, lastname, birthdate, username, password) {
+    $.post(window.location.origin + '/user/create', {
+        username: username,
+        firstname: firstname,
+        lastname: lastname,
+        birthdate: birthdate,
+        password: password
+    },
+    (data) => {
+        console.log('POST response:');
+        console.log(data);
+    });
+}
+
 /**
- * 
  * @param {Response} res
  * @param {function(JSON):void} callback
  */
@@ -85,6 +124,17 @@ export function parseJSONFromResponse(res, callback) {
     .then((json) => {
         callback(json);
     });
+}
+
+/**
+ * @returns {Boolean} if user is logged in
+ */
+export function isLoggedIn() {
+    return false;
+}
+
+export function getLoggedInProfile() {
+    return 'despacito';
 }
 
 /**

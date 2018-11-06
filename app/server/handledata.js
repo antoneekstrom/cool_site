@@ -2,25 +2,19 @@ var server = require('../../server');
 var app = server.app;
 var path = require('path');
 var fs = require('fs');
+var crypto = require('crypto');
+var db = require('../server/db/database');
+
+const SALT_LENGTH = 8;
 
 /**
- * The old way where I stored one user in .json format in /app/server/data/profiles/. First time I get to say deprecated?
- * @param {String} name username
- * @param {function(JSON):void} callback when the deed is done
+ * 
+ * @param {String} username name of the user
+ * @param {function(Object, Object):void} callback 
  */
-function getProfileFromJSON(name, callback) {
-    const file = name + '.json';
-    const filepath = path.resolve(__dirname + '/../data/profiles/' + file);
-
-    fs.readFile(filepath, (err, data) => {
-        var obj = JSON.parse(data);
-        callback(obj);
-    });
-}
-
 function selectUserFromDb(username, callback) {
     let con = server.db.getConnection();
-    con.query('SELECT * FROM web.users WHERE id = ' + 1 + ';', (err, results, fields) => {
+    con.query('SELECT * FROM web.users WHERE username = ?;', [username], (err, results, fields) => {
         callback(results, fields);
     });
 }
@@ -59,6 +53,61 @@ module.exports = {
             this.getProfile(username, (json) => {
                 res.send(json);
             });
+        });
+    },
+
+    /**
+     * I did not write this function.
+     * @param {int} len 
+     */
+    randomHexValue(len) {
+        var maxlen = 8,
+        min = Math.pow(16,Math.min(len,maxlen)-1) 
+        max = Math.pow(16,Math.min(len,maxlen)) - 1,
+        n   = Math.floor( Math.random() * (max-min+1) ) + min,
+        r   = n.toString(16);
+        while ( r.length < len ) {
+            r = r + randHex( len - maxlen );
+        }
+        return r;
+    },
+
+    encryptString(s) {
+        let hash = crypto.createHash('md5');
+        hash.update(s);
+        return hash.digest('hex');
+    },
+
+    /**
+     * @param {Request} req 
+     */
+    processUserCreate(req) {
+        let passobj = this.encryptPassword(req);
+        let pass = passobj.pass;
+        let salt = passobj.salt;
+        let con = db.getConnection();
+        con.query('INSERT INTO web.users (username, password, firstName, lastName, salt) VALUES (?, ?, ?, ?, ?)',
+        [
+            req.body.username,
+            pass,
+            req.body.firstname,
+            req.body.lastname,
+            salt
+        ]);
+    },
+
+    /**
+     * @param {Request} req 
+     */
+    encryptPassword(req) {
+        let salt = this.randomHexValue(SALT_LENGTH);
+        let encryptedPass = this.encryptString(req.body.password + salt);
+        return {pass: encryptedPass, salt: salt};
+    },
+
+    handlePost() {
+        app.post('/user/create', (req, res) => {
+            this.processUserCreate(req);
         });
     },
 
