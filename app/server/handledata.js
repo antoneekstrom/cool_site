@@ -26,6 +26,7 @@ function selectUserFromDb(username, callback) {
  */
 function getProfileFromDatabase(name, callback) {
     selectUserFromDb(name, (data) => {
+        if (data == null) {data = {};}
         if (data.length > 0) {
             var json = JSON.stringify(data[0]);
             callback(json);
