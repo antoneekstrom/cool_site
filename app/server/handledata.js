@@ -21,6 +21,7 @@ function getProfileFromJSON(name, callback) {
 function selectUserFromDb(username, callback) {
     let con = server.db.getConnection();
     con.query('SELECT * FROM web.users WHERE id = ' + 1 + ';', (err, results, fields) => {
+        if (err) console.log(err);
         callback(results, fields);
     });
 }
