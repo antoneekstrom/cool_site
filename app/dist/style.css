@@ -34,7 +34,7 @@ body {
 
     color: var(--contrast);
     background-color: var(--background);
-    font-family: 'Mali';
+    font-family: var(--font-bread);
     font-size: var(--font-size-large);
 }
 
@@ -48,7 +48,7 @@ main.content {
     width: 75%;
 }
 
-main > button, main form input[type="text"] {
+main > button, main form input[type="text"], main form input[type='password'] {
     background-color: var(--background-content);
     color: var(--contrast);
 }
@@ -140,7 +140,12 @@ pre.code {
     margin: 1rem;
 }
 
-button {
+label {
+    font-size: var(--font-size-medium);
+    font-family: var(--font-focus);
+}
+
+button, input[type="submit"] {
     font-family: var(--font-bread);
     font-size: var(--font-size-medium);
     cursor: pointer;
@@ -159,7 +164,7 @@ button {
     transition-property: background-color;
 }
 
-button:hover {
+button:hover, input[type="submit"]:hover {
     background-color: var(--contrast);
     color: var(--background);
 }
@@ -184,7 +189,7 @@ h3 {
     color: var(--contrast);
 }
 
-input[type='text'] {
+input[type='text'], input[type='password'] {
     background-color: var(--background);
     color: var(--contrast);
     font-size: var(--font-size-medium);
@@ -198,7 +203,8 @@ input[type='text'] {
     padding-left: 1rem;
     padding-right: 1rem;
 }
-input[type="text"]:hover {
+input[type="text"]:hover, input[type="text"]:focus,
+input[type='password']:hover, input[type='password']:focus {
     background-color: var(--contrast);
     color: var(--background);
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Component } from 'react';
-import { getProfile } from '../data/clientdata';
+import { getProfile, getUsernameFromURL } from '../data/clientdata';
 import { ContentLoader, Loading, Page, Header, Sheet } from '../components/components';
 
 export class ProfilePage extends Component {
@@ -14,7 +14,9 @@ export class ProfilePage extends Component {
     }
 
     loadProfile() {
-        getProfile('Anton', (profile) => this.setState({profile: profile}));
+        let username = getUsernameFromURL();
+        console.log('profilePage - usernameFromURL: ' + username);
+        getProfile(username, (profile) => this.setState({profile: profile}));
     }
 
     getDisplayData() {

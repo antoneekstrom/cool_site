@@ -20,7 +20,7 @@ module.exports = {
     },
 
     /**
-     * @returns {Connection} connection
+     * @returns {sql.Connection} connection
      */
     getConnection() {
         return connection;

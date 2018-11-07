@@ -1,6 +1,6 @@
 import React from 'react';
 import { Component } from 'react';
-import { getProfile, Profile, parseCompleteURL } from '../data/clientdata';
+import { getProfile, Profile, parseCompleteURL, createUser } from '../data/clientdata';
 
 import { Loading } from "../components/components";
 import { getNavigator } from '../app';
@@ -13,7 +13,7 @@ export class ProfileImage extends Component {
     }
 
     handleClick() {
-        getNavigator().navigate('/profile');
+        getNavigator().navigateToProfilePage(this.props.profile.username);
     }
     
     render() {
@@ -23,7 +23,7 @@ export class ProfileImage extends Component {
 
 export class ProfileName extends Component {
     handleClick() {
-        getNavigator().navigate('/profile');
+        getNavigator().navigateToProfilePage(this.props.profile.username);
     }
     render() {
         return (
@@ -60,15 +60,65 @@ export class ProfileSummary extends Component {
     }
 }
 
+export class TextInput extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {input: ''}
+    }
+    handleChange(event) {
+        this.setState({input: event.target.value});
+        this.props.onChange(event);
+    }
+    render() {
+        return (
+            <label>
+                {this.props.label}
+                <input
+                type={this.props.type == null ? "text" : this.props.type}
+                value={this.state.input}
+                onChange={(e) => this.handleChange(e)}
+                placeholder={this.props.children}
+                />
+            </label>
+        );
+    }
+}
+
 export class CreateAccount extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            firstname: '',
+            lastname: '',
+            username: '',
+            birthdate: '',
+            password: '',
+        }
     }
-    
+
+    /**
+     * @param {React.FormEvent} e event
+     */
+    handleSubmit(e) {
+        e.preventDefault();
+        createUser(
+            this.state.firstname,
+            this.state.lastname,
+            this.state.birthdate,
+            this.state.username,
+            this.state.password
+        );
+    }
+
     render() {
         return (
-            <form className="flex-center">
-                <h2>Login</h2>
+            <form onSubmit={(e) => this.handleSubmit(e)} className="flex-center">
+                <h2>Create Account</h2>
+                <TextInput onChange={(e) => this.state.username = e.target.value} label="Username:" name="username">Username</TextInput>
+                <TextInput type="password" onChange={(e) => this.state.password = e.target.value} label="Password:" name="password">Password</TextInput>
+                <TextInput onChange={(e) => this.state.firstname = e.target.value} label="FirstName:" name="firstname">Firstname</TextInput>
+                <TextInput onChange={(e) => this.state.lastname = e.target.value} label="LastName:" name="lastname">Lastname</TextInput>
+                <input type="submit" value="submit"></input>
             </form>
         );
     }

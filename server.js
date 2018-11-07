@@ -10,13 +10,16 @@ const ud = require('./app/server/usedirectory');
 const login = require('./app/server/handledata');
 const db = require('./app/server/db/database');
 
+var bodyparser = require('body-parser');
+
 module.exports.db = db;
 
 const port = 8080, hostname = 'localhost';
 
 app.use('/', express.static(__dirname + '/app/dist'));
-
-login.handleUserPaths(app);
+app.use(bodyparser.urlencoded({
+    extended: true
+}));
 
 function runDb() {
     let run = (callback) => {
@@ -29,6 +32,9 @@ function runDb() {
 }
 
 function run() {
+    login.handleUserPaths();
+    login.handlePost();
+
     runDb()
     .then(() => getText()
     .then(() => getImages()

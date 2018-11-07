@@ -2,7 +2,7 @@ import React from 'react';
 import { Component } from 'react';
 
 import Prism from 'prismjs';
-import { readResponseText } from '../data/clientdata';
+import { readResponseText, getLoggedInProfile } from '../data/clientdata';
 import { NavigationBar } from './navigation';
 import { getNavigator } from '../app';
 import { ProfileSummary } from './account';
@@ -43,7 +43,7 @@ export class Header extends Component {
                     <NavigationBar/>
                 </div>
                 <div className="header-right flex-row">
-                    <ProfileSummary profileName="Anton"/>
+                    <ProfileSummary profileName={getLoggedInProfile()}/>
                 </div>
             </header>
         );
