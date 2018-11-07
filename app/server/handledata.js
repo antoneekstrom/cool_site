@@ -14,12 +14,7 @@ const SALT_LENGTH = 8;
  */
 function selectUserFromDb(username, callback) {
     let con = server.db.getConnection();
-<<<<<<< HEAD
-    con.query('SELECT * FROM web.users WHERE id = ' + 1 + ';', (err, results, fields) => {
-        if (err) console.log(err);
-=======
     con.query('SELECT * FROM web.users WHERE username = ?;', [username], (err, results, fields) => {
->>>>>>> 33022f19509badaa05b57f0a4442bc1a67cd2b6e
         callback(results, fields);
     });
 }
@@ -114,6 +109,7 @@ module.exports = {
     handlePost() {
         app.post('/user/create', (req, res) => {
             this.processUserCreate(req);
+            res.send('nice');
         });
     },
 

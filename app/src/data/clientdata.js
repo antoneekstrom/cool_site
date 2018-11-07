@@ -102,16 +102,17 @@ export function constructFetch(route, query) {
 }
 
 export function createUser(firstname, lastname, birthdate, username, password) {
-    $.post(window.location.origin + '/user/create', {
-        username: username,
-        firstname: firstname,
-        lastname: lastname,
-        birthdate: birthdate,
-        password: password
-    },
-    (data) => {
-        console.log('POST response:');
-        console.log(data);
+    return new Promise((resolve, reject) => {
+        $.post(window.location.origin + '/user/create', {
+            username: username,
+            firstname: firstname,
+            lastname: lastname,
+            birthdate: birthdate,
+            password: password
+        },
+        (data) => {
+            resolve(data);
+        });
     });
 }
 

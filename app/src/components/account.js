@@ -93,6 +93,8 @@ export class CreateAccount extends Component {
             username: '',
             birthdate: '',
             password: '',
+
+            content: this.createAccount()
         }
     }
 
@@ -107,10 +109,18 @@ export class CreateAccount extends Component {
             this.state.birthdate,
             this.state.username,
             this.state.password
-        );
+        )
+        .then((val) => {
+            console.log('create response: ' + val);
+            if (val == 'nice') {
+                this.setState({
+                    content: this.accountCreated()
+                });
+            }
+        });
     }
 
-    render() {
+    createAccount() {
         return (
             <form onSubmit={(e) => this.handleSubmit(e)} className="flex-center">
                 <h2>Create Account</h2>
@@ -121,6 +131,19 @@ export class CreateAccount extends Component {
                 <input type="submit" value="submit"></input>
             </form>
         );
+    }
+
+    accountCreated() {
+        return (
+            <div>
+                <h1>Epic</h1>
+                <h2>Your account has been created.</h2>
+            </div>
+        );
+    }
+
+    render() {
+        return this.state.content;
     }
 }
 

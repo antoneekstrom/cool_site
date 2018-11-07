@@ -24,7 +24,6 @@ export class Welcome extends Component {
             <Page>
                 <Header/>
                 <main className="flex-center">
-                    <h1>Welcome</h1>
                     <this.FormComponent/>
                 </main>
             </Page>
