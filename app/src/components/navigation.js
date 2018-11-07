@@ -26,7 +26,7 @@ export class NavigationButton extends Component {
     
     render() {
         return (
-            <button onClick={() => this.handleClick()}>{this.props.children}</button>
+            <button className={this.props.className} onClick={() => this.handleClick()}>{this.props.children}</button>
         );
     }
 }
@@ -34,9 +34,17 @@ export class NavigationButton extends Component {
 /**
  * <nav> tag with links inside of it.
  */
-export class NavigationBar extends Component {
+export class NavigationLinks extends Component {
     constructor(props) {
         super(props);
+    }
+
+    componentDidMount() {
+        getNavigator().observe((route) => this.setState({isActive: this.isActive}));
+    }
+
+    componentWillUnmount() {
+        getNavigator().unobserve((route) => this.setState({isActive: this.isActive}));
     }
 
     isExcluded(route) {
@@ -70,7 +78,7 @@ export class NavigationBar extends Component {
     render() {
         var links = this.links();
         return (
-            <nav className="flex-row">{ links }</nav>
+            <nav className={this.props.className}>{ links }</nav>
         );
     }
 }

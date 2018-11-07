@@ -1,6 +1,6 @@
 import React from 'react';
 import { Component } from 'react';
-import { NavigationBar } from '../components/navigation';
+import { NavigationLinks } from '../components/navigation';
 import { CodeBlock, Header, Page } from '../components/components';
 
 export class Example extends Component {
@@ -11,7 +11,6 @@ export class Example extends Component {
     render() {
         return (
             <Page>
-                <Header/>
                 <main className="content">
                     <h1>Epic Example</h1>
                     <h2>Heck yeah</h2>

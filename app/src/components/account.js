@@ -1,9 +1,10 @@
 import React from 'react';
 import { Component } from 'react';
-import { getProfile, Profile, parseCompleteURL, createUser } from '../data/clientdata';
+import { getProfile, Profile, parseCompleteURL, createUser, constructFetch, parseJSONFromResponse, login } from '../data/clientdata';
 
 import { Loading } from "../components/components";
 import { getNavigator } from '../app';
+import { NavigationButton } from './navigation';
 
 export class ProfileImage extends Component {
     constructor(props) {
@@ -123,12 +124,12 @@ export class CreateAccount extends Component {
     createAccount() {
         return (
             <form onSubmit={(e) => this.handleSubmit(e)} className="flex-center">
-                <h2>Create Account</h2>
+                <h1>Create Account</h1>
                 <TextInput onChange={(e) => this.state.username = e.target.value} label="Username:" name="username">Username</TextInput>
                 <TextInput type="password" onChange={(e) => this.state.password = e.target.value} label="Password:" name="password">Password</TextInput>
                 <TextInput onChange={(e) => this.state.firstname = e.target.value} label="FirstName:" name="firstname">Firstname</TextInput>
                 <TextInput onChange={(e) => this.state.lastname = e.target.value} label="LastName:" name="lastname">Lastname</TextInput>
-                <input type="submit" value="submit"></input>
+                <input type="submit" value="Create"></input>
             </form>
         );
     }
@@ -138,6 +139,7 @@ export class CreateAccount extends Component {
             <div>
                 <h1>Epic</h1>
                 <h2>Your account has been created.</h2>
+                <NavigationButton route="/login">Login</NavigationButton>
             </div>
         );
     }
@@ -151,14 +153,33 @@ export class Login extends Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            username: '',
+            password: '',
+            inputText: 'Login'
+        }
+    }
+
+    /**
+     * @param {React.FormEvent} e 
+     */
+    handleSubmit(e) {
+        e.preventDefault();
+
+        login(this.state.username, this.state.password)
+        .then((res) => {
+            parseJSONFromResponse(res, (json) => this.setState({inputText: json.valid ? 'Successful' : 'Incorrect'}));
+        });
     }
     
     render() {
         return (
-            <form action={undefined} className="flex-center">
-                <h2>Login</h2>
-                <input type='text' placeholder='Username'></input>
-                <input type='text' placeholder='Password'></input>
+            <form onSubmit={(e) => this.handleSubmit(e)} className="flex-center">
+                <h1>Login</h1>
+                <TextInput label="Username:" name="username" onChange={(e) => this.state.username = e.target.value}>Username</TextInput>
+                <TextInput label="Password:" name="password" onChange={(e) => this.state.password = e.target.value}>Password</TextInput>
+                <input type="submit" value={this.state.inputText}></input>
             </form>
         );
     }

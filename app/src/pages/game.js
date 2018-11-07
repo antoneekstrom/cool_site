@@ -1,7 +1,7 @@
 import React from 'react';
 import { Component } from 'react';
 
-import { NavigationBar } from '../components/navigation';
+import { NavigationLinks } from '../components/navigation';
 import { Game as CoolGame } from '../game/game';
 
 import $ from 'jquery';

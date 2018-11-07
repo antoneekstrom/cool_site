@@ -32,13 +32,13 @@ export class Profile {
      */
     constructor(obj) {
         this.username = obj.username;
-        this.imagePath = obj.imagePath;
         this.firstName = obj.firstName;
         this.lastName = obj.lastName;
         this.birthDay = obj.birthDay;
         this.birthMonth = obj.birthMonth;
         this.birthYear = obj.birthYear;
         this.gender = obj.gender;
+        this.imagePath = obj.imagePath;
 
         if (this.username == null) {this.username = 'despacito';}
         if (this.imagePath == null) {this.imagePath = DEFAULT_PROFILE_IMAGE_PATH;}
@@ -132,6 +132,11 @@ export function parseJSONFromResponse(res, callback) {
  */
 export function isLoggedIn() {
     return false;
+}
+
+export function login(username, password) {
+    let url = constructFetch('/user/login', {username: username, password: password});
+    return fetch(url);
 }
 
 export function getLoggedInProfile() {

@@ -3,7 +3,7 @@ import { Component } from 'react';
 
 import { CodeBlock, Header, Page } from "../components/components";
 import { Login, CreateAccount } from '../components/account';
-import { NavigationBar, NavigationButton } from '../components/navigation';
+import { NavigationLinks, NavigationButton } from '../components/navigation';
 import { getNavigator } from '../app';
 import { isLoggedIn } from "../data/clientdata";
 
@@ -22,10 +22,7 @@ export class Welcome extends Component {
     render() {
         return (
             <Page>
-                <Header/>
-                <main className="flex-center">
-                    <this.FormComponent/>
-                </main>
+                <this.FormComponent/>
             </Page>
         );
     }

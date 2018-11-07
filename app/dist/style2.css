@@ -1,0 +1,152 @@
+:root {
+    --font-size-very-small: 0.9vw;
+    --font-size-small: 1.3vw;
+    --font-size-medium: 1.4vw;
+    --font-size-large: 3vw;
+
+    --profile-img-size: 3rem;
+
+    --font-focus: 'Product Sans';
+    --font-bread: 'Open Sans';
+
+    --button-padding: 0.3rem;
+    --button-padding-sides: 0.7rem;
+    --small-margin: 0.5em;
+    --not-as-small-margin: 0.8em;
+    --medium-margin: 1.5em;
+    --border-radius: 0.5em;
+    --border-width: 0.20rem;
+    --left-nav-width: 15rem;
+
+    --light-color: rgba(204, 222, 255, 0.643);
+    --color: rgb(93, 149, 255);
+    --contrast: #333333;
+    --background-content: white;
+    --background-faded: rgb(207, 207, 207);
+    --background: #eeeeee;
+}
+
+@font-face {
+    src: url('./fonts/Product Sans Regular.ttf');
+    font-family: 'Product Sans';
+    font-style: normal;
+}
+@font-face {
+    src: url('./fonts/Product Sans Bold.ttf');
+    font-family: 'Product Sans';
+    font-style: bold;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+
+    color: var(--contrast);
+    background-color: var(--background);
+    font-family: var(--font-bread);
+    font-size: var(--font-size-medium);
+}
+
+input[type="text"] {
+    cursor: auto;
+}
+
+input, button {
+    outline: none;
+    border: none;
+    cursor: pointer;
+    border-radius: var(--border-radius);
+
+    margin: var(--small-margin);
+    padding: var(--button-padding); 
+    padding-left: var(--button-padding-sides);
+    padding-right: var(--button-padding-sides);
+
+    color: var(--contrast);
+    background-color: var(--background-content);
+    font-size: var(--font-size-medium);
+    font-family: var(--font-focus);
+}
+
+input.active {
+    background-color: var(--contrast);
+    color: var(--background);
+}
+
+label {
+    font-family: var(--font-focus);
+}
+
+input:hover, button:hover {
+    background-color: var(--background-faded);
+}
+
+input:focus, button:focus {
+    background-color: var(--contrast);
+    color: var(--background);
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+}
+
+h1, h2, h3 {
+    font-family: var(--font-focus);
+}
+
+.profile-image {
+    width: var(--profile-img-size);
+    cursor: pointer;
+}
+
+.main-container {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+
+    width: 100%;
+}
+.main-container main {
+    width: 100%;
+}
+
+.left-nav {
+    display: flex;
+    flex-direction: column;
+
+    padding: 0;
+    width: var(--left-nav-width);
+    height: 30rem;
+}
+
+.left-nav button {
+    background-color: var(--light-color);
+    border-radius: 10rem;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+
+    font-size: var(--font-size-very-small);
+
+    margin-left: 0;
+    text-align: left;
+    padding: var(--small-margin);
+    padding-top: var(--not-as-small-margin);
+    padding-bottom: var(--not-as-small-margin);
+    padding-left: var(--medium-margin);
+    
+    color: var(--color);
+}
+
+.flex-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}

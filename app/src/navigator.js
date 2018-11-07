@@ -37,6 +37,10 @@ class Navigator {
         this.observers.push(callback);
     }
 
+    unobserve(func) {
+        delete this.observers.find((val, i) => {val == func;});
+    }
+
     /**
      * Navigate to a path and notify observers of URL change.
      * @param {String} path to navigate to

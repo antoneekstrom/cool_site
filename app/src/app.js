@@ -9,6 +9,7 @@ import { Info } from './pages/info';
 import { Example } from './pages/example';
 import { Game } from './pages/game';
 import { ProfilePage } from './pages/profile';
+import { LoginPage } from './pages/login';
 
 let navigator = new Navigator();
 
@@ -28,7 +29,8 @@ export class App extends Component {
             'home': <Welcome/>,
             'info': <Info/>,
             'example': <Example/>,
-            'profile': <ProfilePage/>
+            'profile': <ProfilePage/>,
+            'login': <LoginPage/>
         };
 
         this.state = {
@@ -65,11 +67,7 @@ export class App extends Component {
      * The page where dynamic content will be rendered.
      */
     page(props) {
-        return (
-            <div>
-                {this.state.content}
-            </div>
-        );
+        return this.state.content;
     }
 
     componentDidMount() {

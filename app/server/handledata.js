@@ -24,7 +24,7 @@ function selectUserFromDb(username, callback) {
  * @param {String} name username
  * @param {function(JSON):void} callback 
  */
-function getProfileFromDatabase(name, callback) {
+function getUserAsJSON(name, callback) {
     selectUserFromDb(name, (data) => {
         if (data == null) {data = {};}
         if (data.length > 0) {
@@ -47,12 +47,28 @@ module.exports = {
      * Setup server response for /user paths
      */
     handleUserPaths() {
+        /**
+         * Request profile data for username
+         */
         app.get('/user/profile', (req, res) => {
 
             const username = req.query.username;
 
-            this.getProfile(username, (json) => {
-                res.send(json);
+            this.getProfile(username, (profile) => {
+                res.send(profile);
+            });
+        });
+
+        /**
+         * Request logintoken for account
+         */
+        app.get('/user/login', (req, res) => {
+            const username = req.query.username;
+            const password = req.query.password;
+
+            this.requestLoginToken(username, password)
+            .then((val) => {
+                res.send(JSON.stringify({valid: val}));
             });
         });
     },
@@ -113,13 +129,36 @@ module.exports = {
         });
     },
 
-    login(username, password) {},
+    requestLoginToken(username, password) {
+        return this.authenticatePassword(username, password);
+    },
+
+    authenticatePassword(username, password) {
+        let run = (callback) => getUserAsJSON(username, (json) => {
+
+            let user = JSON.parse(json);
+            let passwordToTest = this.encryptString(password + user.salt);
+
+            let valid = passwordToTest == user.password;
+            callback(valid);
+        });
+
+        return new Promise((resolve, reject) => {
+
+            if (username == '' || password == '') {
+                resolve(false);
+            }
+            else {
+                run((passwordIsCorrect) => resolve(passwordIsCorrect));
+            }
+        });
+    },
 
     /**
      * @param {String} name 
      * @param {function(Object):void} callback 
      */
     getProfile(name, callback) {
-        getProfileFromDatabase(name, (json) => callback(json));
+        getUserAsJSON(name, (json) => callback(json));
     }
 };

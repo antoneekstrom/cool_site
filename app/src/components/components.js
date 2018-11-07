@@ -3,14 +3,27 @@ import { Component } from 'react';
 
 import Prism from 'prismjs';
 import { readResponseText, getLoggedInProfile } from '../data/clientdata';
-import { NavigationBar } from './navigation';
+import { NavigationLinks } from './navigation';
 import { getNavigator } from '../app';
 import { ProfileSummary } from './account';
 
 export class Page extends Component {
+    navigation() {
+        return aside == null ? <NavigationLinks className="left-nav"/> : aside;
+    }
     render() {
+        let aside = this.props.aside;
         return (
-            <div className="flex-center page">{this.props.children}</div>
+            <div className="flex-center page">
+                <Header/>
+                <div className="main-container">
+                    <aside className="flex-center">
+                    </aside>
+                    <main className="flex-center">
+                        {this.props.children}
+                    </main>
+                </div>
+            </div>
         );
     }
 }
@@ -39,9 +52,7 @@ export class Header extends Component {
                 <div className="header-left flex-row">
                     {this.toggleButton()}
                 </div>
-                <div className="header-middle flex-row">
-                    <NavigationBar/>
-                </div>
+                <NavigationLinks className="flex-row"/>
                 <div className="header-right flex-row">
                     <ProfileSummary profileName={getLoggedInProfile()}/>
                 </div>

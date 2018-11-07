@@ -41,7 +41,6 @@ export class ProfilePage extends Component {
         const data = this.getDisplayData();
         return (
             <Page>
-                <Header/>
                 <main className="flex-center">
                     <h1>{this.state.profile.username}</h1>
                     <Sheet data={data}/>

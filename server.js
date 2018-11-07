@@ -14,7 +14,12 @@ var bodyparser = require('body-parser');
 
 module.exports.db = db;
 
-const port = 8080, hostname = '10.189.212.116';
+const hostnames = {
+    school: '10.189.212.116',
+    home: '192.168.1.106',
+    localhost: 'localhost',
+}
+const port = 8080, hostname = hostnames.localhost;
 
 app.use('/', express.static(__dirname + '/app/dist'));
 app.use(bodyparser.urlencoded({
