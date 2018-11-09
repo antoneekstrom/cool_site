@@ -54,7 +54,7 @@ export class Header extends Component {
                 </div>
                 <NavigationLinks className="flex-row"/>
                 <div className="header-right flex-row">
-                    <ProfileSummary profileName={getLoggedInProfile()}/>
+                    <ProfileSummary/>
                 </div>
             </header>
         );

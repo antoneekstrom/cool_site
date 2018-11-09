@@ -5,24 +5,41 @@ import { CodeBlock, Header, Page } from "../components/components";
 import { Login, CreateAccount } from '../components/account';
 import { NavigationLinks, NavigationButton } from '../components/navigation';
 import { getNavigator } from '../app';
-import { isLoggedIn } from "../data/clientdata";
 
 export class Welcome extends Component {
 
     constructor(props) {
         super(props);
 
+        this.state = {
+            comp: this.create()
+        };
+
         this.navigator = getNavigator();
     }
 
-    FormComponent(props) {
-        return isLoggedIn() ? <Login/> : <CreateAccount/>;
+    create() {
+        return (
+            <div>
+                <CreateAccount/>
+                <button onClick={() => this.setState({comp: this.login()})}>Login to existing account</button>
+            </div>
+        );
+    }
+
+    login() {
+        return (
+            <div>
+                <Login/>
+                <button onClick={() => this.setState({comp: this.create()})}>Create new account</button>
+            </div>
+        );
     }
 
     render() {
         return (
             <Page>
-                <this.FormComponent/>
+                {this.state.comp}
             </Page>
         );
     }

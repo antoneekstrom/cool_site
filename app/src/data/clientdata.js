@@ -1,4 +1,5 @@
 import $ from "jquery";
+import { setCookie, readCookie } from "./cookie";
 
 /**
  * @param {Response} res response object from fetch()
@@ -25,7 +26,10 @@ export function parseCompleteURL(route) {
     }
 }
 
-const DEFAULT_PROFILE_IMAGE_PATH = '/data/images/default.jpg', SEPARATOR = '/';
+export const DEFAULT_PROFILE_IMAGE_PATH = '/data/images/default.jpg',
+             SEPARATOR = '/',
+             COOKIE_TOKEN_KEY = 'login_id'
+
 export class Profile {
     /**
      * @param {JSON} obj containing profile information 
@@ -59,6 +63,14 @@ export class Profile {
             'gender': this.gender,
         };
         return obj;
+    }
+}
+
+export class Token {
+    constructor(tokenobj) {
+        this.id = tokenobj.id;
+        this.username = tokenobj.username;
+        this.expires = tokenobj.expires;
     }
 }
 
@@ -128,19 +140,60 @@ export function parseJSONFromResponse(res, callback) {
 }
 
 /**
- * @returns {Boolean} if user is logged in
+ * Also automatically uses token and applies it as a cookie.
+ * @returns {Promise<JSON>} promise that resolves with a JSON containing info about logintoken
+ * @param {String} username 
+ * @param {String} password 
  */
-export function isLoggedIn() {
-    return false;
-}
-
 export function login(username, password) {
     let url = constructFetch('/user/login', {username: username, password: password});
-    return fetch(url);
+
+    return new Promise((resolve, reject) => {
+
+        fetch(url)
+        .then((val) => val.json().then((json) => {
+            applyToken(new Token(json));
+            resolve(json);
+        }));
+    });
 }
 
+/**
+ * @param {Token} token 
+ */
+export function applyToken(token) {
+    setCookie(COOKIE_TOKEN_KEY, token.id);
+}
+
+export function getTokenFromCookies() {
+    return readCookie(COOKIE_TOKEN_KEY);
+}
+
+/**
+ * @returns {Promise<Profile>} profile that is currently logged, if there is none it returns null
+ */
 export function getLoggedInProfile() {
-    return 'despacito';
+    let q = {};
+    q[COOKIE_TOKEN_KEY] = getTokenFromCookies();
+
+    let url = constructFetch('/user/profile', q);
+
+    return new Promise((resolve, reject) => {
+
+        fetch(url)
+        .then((res) => {
+
+            if (res != null && res.body != null) {
+                res.json().then((json) => {
+                    console.log(json);
+                    resolve(json);
+                });    
+            }
+            else {
+                resolve(null);
+            }
+        });
+    });
 }
 
 /**

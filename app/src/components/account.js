@@ -1,6 +1,6 @@
 import React from 'react';
 import { Component } from 'react';
-import { getProfile, Profile, parseCompleteURL, createUser, constructFetch, parseJSONFromResponse, login } from '../data/clientdata';
+import { getProfile, Profile, parseCompleteURL, createUser, constructFetch, parseJSONFromResponse, login, getLoggedInProfile } from '../data/clientdata';
 
 import { Loading } from "../components/components";
 import { getNavigator } from '../app';
@@ -10,25 +10,46 @@ export class ProfileImage extends Component {
     constructor(props) {
         super(props);
 
-        this.src = parseCompleteURL(this.props.profile.imagePath);
+        if (this.props.profile != null && this.props.profile.imagePath != null) {
+            this.src = parseCompleteURL(this.props.profile.imagePath);
+        }
     }
 
     handleClick() {
-        getNavigator().navigateToProfilePage(this.props.profile.username);
+
+        if (this.props.profile != null) {
+            getNavigator().navigateToProfilePage(this.props.profile.username);
+        }
     }
     
     render() {
-        return <img onClick={() => this.handleClick()} className="profile-image" src={this.src}></img>;
+        if (this.src != null) {
+            return <img onClick={() => this.handleClick()} className="profile-image" src={this.src}></img>;
+        }
+        else {
+            return <div></div>;
+        }
     }
 }
 
 export class ProfileName extends Component {
     handleClick() {
-        getNavigator().navigateToProfilePage(this.props.profile.username);
+
+        if (this.props.profile != null) {
+            getNavigator().navigateToProfilePage(this.props.profile.username);
+        }
+    }
+    getProfileName() {
+        if (this.props.profile != null) {
+            return this.props.profile.username;
+        }
+        else {
+            return 'user not found';
+        }
     }
     render() {
         return (
-            <h3 className="profile-name" onClick={() => this.handleClick()}>{this.props.profile.username}</h3>
+            <h3 className="profile-name" onClick={() => this.handleClick()}>{this.getProfileName()}</h3>
         );
     }
 }
@@ -36,15 +57,30 @@ export class ProfileName extends Component {
 export class ProfileSummary extends Component {
     constructor(props) {
         super(props);
-        this.state = {profile: undefined};
+        this.state = {profile: <Loading/>};
         this.refreshProfile();
     }
 
     refreshProfile() {
-        getProfile(this.props.profileName, (profile) => {
+        let profileName = this.props.profileName;
 
-            this.setState({profile: profile});
-        });
+        if (profileName == null) {
+
+            getLoggedInProfile()
+            .then((profile) => {
+
+                this.setProfile(profile);
+            });
+        }
+        else {
+            getProfile(profileName, (profile) => {
+                this.setProfile(profile);
+            });
+        }
+    }
+
+    setProfile(profile) {
+        this.setState({profile: profile});
     }
 
     getComponents() {
@@ -168,8 +204,8 @@ export class Login extends Component {
         e.preventDefault();
 
         login(this.state.username, this.state.password)
-        .then((res) => {
-            parseJSONFromResponse(res, (json) => this.setState({inputText: json.valid ? 'Successful' : 'Incorrect'}));
+        .then((json) => {
+            this.setState({inputText: json.valid ? 'Successful' : 'Incorrect'});
         });
     }
     

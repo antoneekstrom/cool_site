@@ -5,7 +5,7 @@ var fs = require('fs');
 var crypto = require('crypto');
 var db = require('../server/db/database');
 
-const SALT_LENGTH = 8;
+const SALT_LENGTH = 8, LOGIN_TOKEN_LENGTH = 32, TOKEN_LIFETIME = 120;
 
 /**
  * 
@@ -34,6 +34,8 @@ function getUserAsJSON(name, callback) {
     });
 }
 
+let tokens = [];
+
 module.exports = {
 
     sqlResultsIntoObject(results) {
@@ -41,6 +43,10 @@ module.exports = {
         for (let i = 0; i < results.length; i++) {
         }
         return obj;
+    },
+
+    nullCheckQuery(q) {
+        return q != null && q != '' && q != 'undefined';
     },
 
     /**
@@ -53,10 +59,21 @@ module.exports = {
         app.get('/user/profile', (req, res) => {
 
             const username = req.query.username;
+            const tokenid = req.query.login_id;
 
-            this.getProfile(username, (profile) => {
-                res.send(profile);
-            });
+            if (this.nullCheckQuery(username)) {
+                
+                this.getProfile(username, (profile) => {
+                    res.send(profile);
+                });
+            }
+            else if (this.nullCheckQuery(tokenid)) {
+
+                this.getProfileWithTokenId(tokenid)
+                .then((profile) => {
+                    res.send(profile == null ? {} : profile);
+                });
+            }
         });
 
         /**
@@ -67,8 +84,8 @@ module.exports = {
             const password = req.query.password;
 
             this.requestLoginToken(username, password)
-            .then((val) => {
-                res.send(JSON.stringify({valid: val}));
+            .then((token) => {
+                res.send(JSON.stringify(token));
             });
         });
     },
@@ -84,7 +101,7 @@ module.exports = {
         n   = Math.floor( Math.random() * (max-min+1) ) + min,
         r   = n.toString(16);
         while ( r.length < len ) {
-            r = r + randHex( len - maxlen );
+            r = r + this.randomHexValue( len - maxlen );
         }
         return r;
     },
@@ -129,10 +146,80 @@ module.exports = {
         });
     },
 
-    requestLoginToken(username, password) {
-        return this.authenticatePassword(username, password);
+    createLogintoken(username, lengthvalidinminutes) {
+        let tokenid = this.randomHexValue(LOGIN_TOKEN_LENGTH);
+
+        let date = new Date();
+        date.setMinutes(date.getMinutes() + lengthvalidinminutes);
+        
+        let token = {
+            username: username,
+            id: tokenid,
+            expires: date
+        };
+        tokens.push(token);
+        return token;
     },
 
+    getProfileWithTokenId(tokenid) {
+        return new Promise((resolve, reject) => {
+            if (this.authenticateWithtoken(tokenid)) {
+                for (let i = 0; i < tokens.length; i++) {
+                    let t = tokens[i];
+                    if (tokenid == t.id) {
+                        this.getProfile(t.username, (profile) => resolve(profile));
+                    }
+                }
+            }
+            resolve(null);
+        });
+    },
+
+    tokenHasExpired(tokenobj) {
+        let d = new Date();
+        return tokenobj != null && tokenobj.expires.getTime() > d.getTime();
+    },
+
+    authenticateWithtoken(tokenid) {
+        for (let i = 0; i < tokens.length; i++) {
+            let token = tokens[i];
+
+            if (token.id == tokenid && !this.tokenHasExpired(token)) {
+                return true;
+            }
+        }
+        return false;
+    },
+
+    requestLoginToken(username, password) {
+        return new Promise((resolve, reject) => {
+
+            this.authenticatePassword(username, password)
+            .then((passIsValid) => {
+    
+                if (passIsValid) {
+                    let token = this.createLogintoken(username, TOKEN_LIFETIME);
+        
+                    if (token != null) {
+                        token.valid = true;
+                        resolve(token);
+                    }
+                }
+                else {
+                    let emptyToken = {
+                        valid: false
+                    };
+                    resolve(emptyToken);
+                }
+            });
+        });
+    },
+
+    /**
+     * @returns {Promise} promise with a boolean
+     * @param {String} username 
+     * @param {String} password 
+     */
     authenticatePassword(username, password) {
         let run = (callback) => getUserAsJSON(username, (json) => {
 
