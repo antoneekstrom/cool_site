@@ -2,9 +2,9 @@ import React from 'react';
 import { Component } from 'react';
 
 import Prism from 'prismjs';
-import { readResponseText, getLoggedInProfile } from '../data/clientdata';
+import { readResponseText, getLoggedInProfile, searchDbByName } from '../data/clientdata';
 import { NavigationLinks } from './navigation';
-import { getNavigator } from '../app';
+import { getNavigator, getProfileUpdator } from '../app';
 import { ProfileSummary } from './account';
 
 export class Page extends Component {
@@ -17,8 +17,6 @@ export class Page extends Component {
             <div className="flex-center page">
                 <Header/>
                 <div className="main-container">
-                    <aside className="flex-center">
-                    </aside>
                     <main className="flex-center">
                         {this.props.children}
                     </main>
@@ -28,16 +26,135 @@ export class Page extends Component {
     }
 }
 
+export class ResultList extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    ListItem(props) {
+        return (
+            <li onClick={(e) => props.onClick(e)} className="search-result" key={props.key}>{props.text}</li>
+        );
+    }
+
+    handleClick(e) {
+        this.props.onItemClick(e);
+    }
+    
+    getList() {
+        let l = [];
+
+        if (this.props.results == null) { return l; }
+
+        for (let i = 0; i < this.props.results.length; i++) {
+            let val = this.props.results[i];
+            console.log(val);
+            l.push(<this.ListItem onClick={(e) => this.handleClick(e)} text={val.text} key={i}/>);
+        }
+
+        return l;
+    }
+
+    render() {
+        let list = this.getList();
+        return (
+            <ol className="search-results">{list}</ol>
+        );
+    }
+}
+
+export class Search extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            results: {},
+            value: ''
+        };
+    }
+
+    getData(callback) {
+        callback(this.props.data);
+    }
+    
+    getResults(searchval, callback) {
+        let l = [];
+        
+        this.getData((data) => {
+            
+            for (let i = 0; i < data.length; i++) {
+                let val = data[i];
+                if (val.text.includes(searchval)) {
+                    l.push(val);
+                }
+            }
+            callback(l);
+        });
+    }
+
+    onChange(e) {
+        let val = e.target.value;
+        console.log(val);
+
+        this.getResults(val, (l) => {
+            this.setState({
+                value: val,
+                results: l
+            });
+        });
+    }
+
+    handleItemClick(e) {
+        this.props.onItemClick(e);
+    }
+
+    resultComponent() {
+        const isNice = this.state.value != '' && this.state.results.length > 0;
+        return isNice ? <ResultList onItemClick={(e) => this.handleItemClick(e)} results={this.state.results}/> : undefined;
+    }
+
+    render() {
+        return (
+            <div className="flex-center">
+                <input className="search-field" type="text" value={this.state.value} onChange={(e) => this.onChange(e)} placeholder="Search.."/>
+                {this.resultComponent()}                
+            </div>
+        );
+    }
+}
+
+export class SearchUsers extends Search {
+    getData(callback) {
+
+        searchDbByName(this.state.value).then((val) => {
+
+            let d = [];
+            for (let i = 0; i < val.length; i++) {
+                let name = val[i].username;
+                d.push({
+                    text: name,
+                });
+            }
+
+            callback(d);
+        });
+    }
+    /**
+     * @param {React.MouseEvent} e 
+     */
+    handleItemClick(e) {
+    }
+}
+
 export class Header extends Component {
 
     constructor(props) {
         super(props);
         this.navigator = getNavigator();
-        this.state = {hidden: false}
+        this.state = {hidden: false};
     }
 
     toggleButton() {
-        return <button onClick={() => this.toggleVisibility()}>{this.state.hidden ? "Show" : "Hide"}</button>;
+        return <button id="hide-header-button" onClick={() => this.toggleVisibility()}>{this.state.hidden ? "Show" : "Hide"}</button>;
     }
 
     toggleVisibility() { this.setState({hidden: !this.state.hidden}); }
@@ -49,13 +166,10 @@ export class Header extends Component {
     visible() {
         return (
             <header>
-                <div className="header-left flex-row">
-                    {this.toggleButton()}
-                </div>
+                {this.toggleButton()}
                 <NavigationLinks className="flex-row"/>
-                <div className="header-right flex-row">
-                    <ProfileSummary/>
-                </div>
+                <SearchUsers/>
+                <ProfileSummary/>
             </header>
         );
     }

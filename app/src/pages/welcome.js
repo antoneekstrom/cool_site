@@ -20,7 +20,7 @@ export class Welcome extends Component {
 
     create() {
         return (
-            <div>
+            <div className="flex-center">
                 <CreateAccount/>
                 <button onClick={() => this.setState({comp: this.login()})}>Login to existing account</button>
             </div>
@@ -29,7 +29,7 @@ export class Welcome extends Component {
 
     login() {
         return (
-            <div>
+            <div className="flex-center">
                 <Login/>
                 <button onClick={() => this.setState({comp: this.create()})}>Create new account</button>
             </div>

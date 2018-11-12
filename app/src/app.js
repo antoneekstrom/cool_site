@@ -10,11 +10,22 @@ import { Example } from './pages/example';
 import { Game } from './pages/game';
 import { ProfilePage } from './pages/profile';
 import { LoginPage } from './pages/login';
+import { Updator } from "./updator";
 
 let navigator = new Navigator();
+let profileUpdator = new Updator();
 
+/**
+ * @returns {Navigator} navigator
+ */
 export function getNavigator() {
     return navigator;
+}
+/**
+ * @returns {Updator} updator
+ */
+export function getProfileUpdator() {
+    return profileUpdator;
 }
 
 export class App extends Component {
@@ -23,6 +34,7 @@ export class App extends Component {
         super(props);
 
         this.navigator = getNavigator();
+        this.profileUpdator = getProfileUpdator();
 
         this.pages = {
             '': <Welcome/>,

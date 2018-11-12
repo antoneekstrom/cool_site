@@ -12,7 +12,7 @@ const SALT_LENGTH = 8, LOGIN_TOKEN_LENGTH = 32, TOKEN_LIFETIME = 120;
  * @param {String} username name of the user
  * @param {function(Object, Object):void} callback 
  */
-function selectUserFromDb(username, callback) {
+function selectUsersFromDb(username, callback) {
     let con = server.db.getConnection();
     con.query('SELECT * FROM web.users WHERE username = ?;', [username], (err, results, fields) => {
         callback(results, fields);
@@ -25,10 +25,10 @@ function selectUserFromDb(username, callback) {
  * @param {function(JSON):void} callback 
  */
 function getUserAsJSON(name, callback) {
-    selectUserFromDb(name, (data) => {
-        if (data == null) {data = {};}
-        if (data.length > 0) {
-            var json = JSON.stringify(data[0]);
+    selectUsersFromDb(name, (results, fields) => {
+        if (results == null) {results = {};}
+        if (results.length > 0) {
+            var json = JSON.stringify(results[0]);
             callback(json);
         }
     });
@@ -47,6 +47,15 @@ module.exports = {
 
     nullCheckQuery(q) {
         return q != null && q != '' && q != 'undefined';
+    },
+
+    handleDataPaths() {
+        app.get('/data/users', (req, res) => {
+            const q = req.query.username;
+            selectUsersFromDb(q, (results, fields) => {
+                res.send(results);
+            });
+        });
     },
 
     /**
@@ -70,8 +79,8 @@ module.exports = {
             else if (this.nullCheckQuery(tokenid)) {
 
                 this.getProfileWithTokenId(tokenid)
-                .then((profile) => {
-                    res.send(profile == null ? {} : profile);
+                .then((json) => {
+                    res.send(json == null ? {} : json);
                 });
             }
         });
@@ -161,30 +170,55 @@ module.exports = {
         return token;
     },
 
+    getUsernameFromToken(tokenid) {
+        let username;
+
+        for (let i = 0; i < tokens.length; i++) {
+
+            let t = tokens[i];
+            if (tokenid == t.id) {
+                username = t.username;
+            }
+        }
+
+        return username;
+    },
+
     getProfileWithTokenId(tokenid) {
         return new Promise((resolve, reject) => {
+
             if (this.authenticateWithtoken(tokenid)) {
-                for (let i = 0; i < tokens.length; i++) {
-                    let t = tokens[i];
-                    if (tokenid == t.id) {
-                        this.getProfile(t.username, (profile) => resolve(profile));
-                    }
-                }
+
+                let username = this.getUsernameFromToken(tokenid);
+
+                this.getProfile(username, (json) => {
+                    resolve(json);
+                });
             }
-            resolve(null);
         });
     },
 
-    tokenHasExpired(tokenobj) {
+    /**
+     * Returns TRUE if token is VALID and has NOT expired.
+     * @param {boolean} tokenobj if token has expired
+     */
+    tokenHasNotExpired(tokenobj) {
         let d = new Date();
-        return tokenobj != null && tokenobj.expires.getTime() > d.getTime();
+        let now = d.getTime();
+        let then = tokenobj.expires.getTime();
+
+        let hasExpired = then < now;
+
+        return !hasExpired;
     },
 
     authenticateWithtoken(tokenid) {
         for (let i = 0; i < tokens.length; i++) {
             let token = tokens[i];
-
-            if (token.id == tokenid && !this.tokenHasExpired(token)) {
+            
+            if (token == null) {continue;}
+            
+            if (token.id == tokenid && this.tokenHasNotExpired(token)) {
                 return true;
             }
         }

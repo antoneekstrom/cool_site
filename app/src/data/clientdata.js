@@ -1,5 +1,6 @@
 import $ from "jquery";
 import { setCookie, readCookie } from "./cookie";
+import { getProfileUpdator } from "../app";
 
 /**
  * @param {Response} res response object from fetch()
@@ -153,6 +154,7 @@ export function login(username, password) {
         fetch(url)
         .then((val) => val.json().then((json) => {
             applyToken(new Token(json));
+            getProfileUpdator().notifyObservers({});
             resolve(json);
         }));
     });
@@ -170,7 +172,9 @@ export function getTokenFromCookies() {
 }
 
 /**
- * @returns {Promise<Profile>} profile that is currently logged, if there is none it returns null
+ * @returns {Promise<Profile>} profile that is currently logged,
+ * if there is none it returns an empty object I think, or maybe null.
+ * Test for both to be sure.
  */
 export function getLoggedInProfile() {
     let q = {};
@@ -185,14 +189,24 @@ export function getLoggedInProfile() {
 
             if (res != null && res.body != null) {
                 res.json().then((json) => {
-                    console.log(json);
-                    resolve(json);
+                    let profile = new Profile(json);
+                    resolve(profile);
                 });    
             }
             else {
                 resolve(null);
             }
         });
+    });
+}
+
+export function searchDbByName(username) {
+    return new Promise((resolve, reject) => {
+        const url = constructFetch('/data/users', {username: username});
+        fetch(url)
+        .then((res) => res.json().then(json => {
+            resolve(json);
+        }));
     });
 }
 

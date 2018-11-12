@@ -1,10 +1,12 @@
 :root {
-    --font-size-very-small: 0.9vw;
-    --font-size-small: 1.3vw;
-    --font-size-medium: 1.4vw;
-    --font-size-large: 3vw;
+    --font-size-very-small: 0.8em;
+    --font-size-small: 0.9em;
+    --font-size-medium: 1.2em;
+    --font-size-large: 3em;
 
     --profile-img-size: 3rem;
+    --header-height: 4em;
+    --search-field-width: 12rem;
 
     --font-focus: 'Product Sans';
     --font-bread: 'Open Sans';
@@ -66,6 +68,10 @@ input, button {
     background-color: var(--background-content);
     font-size: var(--font-size-medium);
     font-family: var(--font-focus);
+
+    transition-property: background-color, color;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-out;
 }
 
 input.active {
@@ -89,26 +95,117 @@ input:focus, button:focus {
 header {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: var(--header-height);
+}
+
+header div {
+    height: 100%;
+}
+
+header .profile-image {
+    height: 60%;
+    width: auto;
+}
+
+ul {
+    width: 75%;
+    list-style-type: none;
+}
+
+.search-field {
+    width: var(--search-field-width);
+    padding: var(--button-padding);
+    padding-left: var(--button-padding-sides);
+    padding-right: var(--button-padding-sides);
+}
+
+.search-results {
+    position: absolute;
+    top: 3em;
+    height: auto;
+    list-style-type: none;
+    overflow: hidden;
+
+    padding: 0;
+    background-color: var(--background-content);
+    border-radius: var(--border-radius);
+}
+
+.search-result {
+    cursor: pointer;
+    font-family: var(--font-focus);
+    font-size: var(--font-size-medium);
+    width: var(--search-field-width);
+    padding: var(--button-padding);
+    padding-left: var(--button-padding-sides);
+    padding-right: var(--button-padding-sides);
+
+    text-align: center;
+}
+.search-result:hover {
+    background-color: var(--background-faded);
+}
+
+.sheet .sheet-row {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    border-radius: var(--border-radius);
+    padding: var(--button-padding);
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+.sheet .sheet-row:nth-child(odd) {
+    background-color: var(--background-content);
+}
+
+pre.code {
+    border-radius: var(--border-radius);
+    margin: 1rem;
 }
 
 h1, h2, h3 {
     font-family: var(--font-focus);
 }
 
+h1 { font-size: var(--font-size-large); }
+h2 { font-size: var(--font-size-medium); }
+h3 { font-size: var(--font-size-small); }
+
+.profile-summary {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-name {
+    cursor: pointer;
+}
+
 .profile-image {
     width: var(--profile-img-size);
+    height: var(--profile-img-size);
     cursor: pointer;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    border-radius: 100%;
+    border: solid var(--contrast) var(--border-width);
 }
 
 .main-container {
     display: flex;
     align-items: center;
-    justify-content: start;
+    justify-content: center;
 
     width: 100%;
 }
 .main-container main {
-    width: 100%;
+    width: 80%;
 }
 
 .left-nav {

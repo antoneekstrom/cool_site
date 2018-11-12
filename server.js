@@ -39,6 +39,7 @@ function runDb() {
 function run() {
     login.handleUserPaths();
     login.handlePost();
+    login.handleDataPaths();
 
     runDb()
     .then(() => getText()

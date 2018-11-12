@@ -15,7 +15,6 @@ export class ProfilePage extends Component {
 
     loadProfile() {
         let username = getUsernameFromURL();
-        console.log('profilePage - usernameFromURL: ' + username);
         getProfile(username, (profile) => this.setState({profile: profile}));
     }
 

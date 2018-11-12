@@ -3,13 +3,14 @@ import { Component } from 'react';
 import { getProfile, Profile, parseCompleteURL, createUser, constructFetch, parseJSONFromResponse, login, getLoggedInProfile } from '../data/clientdata';
 
 import { Loading } from "../components/components";
-import { getNavigator } from '../app';
+import { getNavigator, getProfileUpdator } from '../app';
 import { NavigationButton } from './navigation';
 
 export class ProfileImage extends Component {
     constructor(props) {
         super(props);
 
+        console.log(this.props.profile);
         if (this.props.profile != null && this.props.profile.imagePath != null) {
             this.src = parseCompleteURL(this.props.profile.imagePath);
         }
@@ -57,18 +58,26 @@ export class ProfileName extends Component {
 export class ProfileSummary extends Component {
     constructor(props) {
         super(props);
-        this.state = {profile: <Loading/>};
+        this.state = {
+            profile: undefined,
+            content: <Loading/>
+        };
+        getProfileUpdator().observe(() => this.refreshProfile());
+    }
+
+    componentDidMount() {
         this.refreshProfile();
     }
 
     refreshProfile() {
+        this.setState({content: <Loading/>});
+
         let profileName = this.props.profileName;
 
         if (profileName == null) {
 
             getLoggedInProfile()
             .then((profile) => {
-
                 this.setProfile(profile);
             });
         }
@@ -79,11 +88,15 @@ export class ProfileSummary extends Component {
         }
     }
 
-    setProfile(profile) {
-        this.setState({profile: profile});
+    notLoggedIn() {
+        return (
+            <div className="flex-center">
+                <h2>Not logged in</h2>
+            </div>
+        );
     }
 
-    getComponents() {
+    loggedIn() {
         return (
             <div className="profile-summary">
                 <ProfileName profile={this.state.profile}/>
@@ -92,8 +105,25 @@ export class ProfileSummary extends Component {
         );
     }
 
+    checkProfile() {
+        return this.state.profile != null && this.state.profile != {};
+    }
+
+    setProfile(profile) {
+        this.setState({
+            profile: profile,
+        });
+        this.setState({
+            content: this.getComponents()
+        });
+    }
+
+    getComponents() {
+        return this.checkProfile() ? this.loggedIn() : this.notLoggedIn();
+    }
+
     render() {
-        return this.state.profile == undefined ? <Loading/> : this.getComponents();
+        return this.state.content;
     }
 }
 
