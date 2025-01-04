@@ -1,0 +1,14 @@
+version: '3.1'
+
+services:
+  db:
+    image: mysql
+    restart: always
+    ports:
+      -
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: server
+      MYSQL_PASSWORD: password
+      MYSQL_ALLOW_EMPTY_PASSWORD: yes
+    # (this is just an example, not intended to be a production configuration)

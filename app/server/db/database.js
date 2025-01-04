@@ -1,7 +1,7 @@
 const sql = require('mysql');
 
 const port = 3306, host = 'localhost';
-var credentials = {}, hasCredentials = false;
+var credentials = {}, hasCredentials = true;
 var connection;
 
 module.exports = {
